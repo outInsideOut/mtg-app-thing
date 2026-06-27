@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MTG Random Cards</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>MTG Random Card Picker</h1>
+
+    <form id="fetch-form">
+      <div class="controls">
+
+        <div class="control-group">
+          <label for="n">Number of cards</label>
+          <input type="number" id="n" name="n" value="5" min="1" max="30" />
+        </div>
+
+        <button type="submit" id="submit-btn">Draw Cards</button>
+      </div>
+
+      <div class="filter-sections">
+
+        <div class="filter-section" id="type-section">
+          <button type="button" class="filter-header" id="type-toggle">
+            <span class="filter-title">Card Types</span>
+            <span class="filter-summary" id="type-summary">Any</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="filter-body" id="type-body">
+            <div class="type-section-label">Meta-types</div>
+            <div class="type-grid" id="meta-type-grid">
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="meta-type" data-subtypes="creature,artifact,enchantment,planeswalker,battle" value="non-land-permanent" /> Non-land Permanent</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="meta-type" data-subtypes="instant,sorcery" value="non-permanent" /> Non-permanent</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="meta-type" data-subtypes="land" value="land-meta" /> Land</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+            </div>
+            <div class="type-section-label" style="margin-top:0.75rem">Individual types</div>
+            <div class="type-grid" id="individual-type-grid">
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="creature" /> Creature</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="instant" /> Instant</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="sorcery" /> Sorcery</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="enchantment" /> Enchantment</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="artifact" /> Artifact</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="land" /> Land</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="planeswalker" /> Planeswalker</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+              <div class="type-row"><label class="checkbox-item"><input type="checkbox" class="ind-type" value="battle" /> Battle</label><input type="number" class="type-count" min="1" max="30" placeholder="any" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section" id="rarity-section">
+          <button type="button" class="filter-header" id="rarity-toggle">
+            <span class="filter-title">Rarity</span>
+            <span class="filter-summary" id="rarity-summary">Any</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="filter-body" id="rarity-body">
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" value="common" /> <span class="rarity-common">Common</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="uncommon" /> <span class="rarity-uncommon">Uncommon</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="rare" /> <span class="rarity-rare">Rare</span></label>
+              <label class="checkbox-item"><input type="checkbox" value="mythic" /> <span class="rarity-mythic">Mythic</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section" id="set-section">
+          <button type="button" class="filter-header" id="set-toggle">
+            <span class="filter-title">Set <span class="hint">(expansions only)</span></span>
+            <span class="filter-summary" id="set-summary">Any</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="filter-body" id="set-body">
+            <div class="set-list" id="set-list"></div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+    <div id="status"></div>
+    <div id="results" class="card-grid"></div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
