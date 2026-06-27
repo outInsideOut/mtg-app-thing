@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type (overrides auto-detection)"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine bump type
+        id: bump
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "type=${{ github.event.inputs.bump }}" >> $GITHUB_OUTPUT
+          else
+            MSG=$(git log -1 --pretty=%B)
+            if echo "$MSG" | grep -qE "BREAKING CHANGE|feat!:"; then
+              echo "type=major" >> $GITHUB_OUTPUT
+            elif echo "$MSG" | grep -qE "^feat(\(.+\))?:"; then
+              echo "type=minor" >> $GITHUB_OUTPUT
+            else
+              echo "type=patch" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Compute new version
+        id: version
+        shell: bash
+        run: |
+          LATEST=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          LATEST=${LATEST:-v0.0.0}
+          MAJOR=$(echo $LATEST | cut -d. -f1 | tr -d 'v')
+          MINOR=$(echo $LATEST | cut -d. -f2)
+          PATCH=$(echo $LATEST | cut -d. -f3)
+          case "${{ steps.bump.outputs.type }}" in
+            major) MAJOR=$((MAJOR+1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR+1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH+1)) ;;
+          esac
+          NEW="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "tag=$NEW" >> $GITHUB_OUTPUT
+          echo "Releasing $NEW (bump: ${{ steps.bump.outputs.type }})"
+
+      - name: Tag release
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin ${{ steps.version.outputs.tag }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build exe
+        run: build.bat
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: dist/MTG Card Picker.exe

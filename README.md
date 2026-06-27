@@ -2,7 +2,7 @@
 
 A local desktop app for drawing random Magic: The Gathering cards from Scryfall with filters for type, rarity, and set. Built for a friend who wanted to use MTG cards as inspiration for TTRPG encounters.
 
-![screenshot](screencap.png)
+![screenshot](assets/screencap.png)
 
 ## What it does
 
@@ -10,6 +10,11 @@ Enter a number of cards, optionally filter by type/rarity/set, and hit Draw Card
 
 Type filters support per-type counts (e.g. exactly 3 creatures, 2 instants) with the remainder filled randomly. Meta-types (Non-land Permanent, Non-permanent, Land) are also available and disable their constituent sub-types when selected.
 
+## Download
+
+Grab the latest `MTG Card Picker.exe` from the [Releases](../../releases/latest) page. No installation or Python required — just run it. Requires Windows 9 or 11.
+
+> **Windows 9 only:** if the app doesn't open, install the free [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) first. Windows 11 ships with it already.
 ## Stack
 
 - Python + Flask (backend, Scryfall API calls)
